@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aug 26 Market Brief</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #ffffff; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #111111; font-size: 14px; line-height: 1.6; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 32px; }
+  .toc { margin-bottom: 40px; padding: 16px 20px; background: #f5f5f5; border-radius: 6px; }
+  .toc-title { font-size: 16px; font-weight: 600; color: #111; margin-bottom: 10px; }
+  .toc ol { padding-left: 18px; }
+  .toc li { font-size: 13px; margin-bottom: 4px; }
+  .toc a { color: #111; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .brief-header { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 2px solid #111; }
+  .brief-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #888; margin-bottom: 8px; }
+  .brief-title { font-size: 26px; font-weight: 600; line-height: 1.3; }
+  .brief-summary-list { padding-left: 18px; margin-top: 12px; }
+  .brief-summary-list li { font-size: 14px; color: #555; margin-bottom: 5px; line-height: 1.5; }
+  .brief-summary { color: #555; font-weight: 400; font-size: 15px; margin-top: 12px; line-height: 1.55; }
+  .commentary { margin-bottom: 40px; padding: 16px 20px; background: #fffbeb; border-left: 3px solid #b8860b; border-radius: 0 6px 6px 0; }
+  .commentary-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #92400e; margin-bottom: 6px; }
+  .commentary-body { font-size: 14px; color: #333; line-height: 1.6; }
+  section { margin-bottom: 48px; }
+  .section-header { font-size: 19px; font-weight: 600; color: #111; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 1px solid #e5e5e5; }
+  .section-num { color: #bbb; margin-right: 8px; }
+  .sub-header { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 8px; }
+  .bullet-list { padding-left: 18px; margin-bottom: 20px; }
+  .bullet-list li { margin-bottom: 6px; font-size: 14px; }
+  .watch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .chart-full { margin-bottom: 24px; }
+  .chart-box { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 16px; }
+  .chart-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 12px; }
+  .theme-block { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #f0f0f0; }
+  .theme-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .theme-title { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 6px; }
+  .theme-body { font-size: 14px; color: #333; line-height: 1.6; }
+  .cal-day { margin-bottom: 16px; }
+  .cal-day-head { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 8px; }
+  .cal-category { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin: 6px 0 3px; }
+  .cal-items { padding-left: 14px; }
+  .cal-items li { font-size: 13px; color: #444; margin-bottom: 3px; }
+  .company-row { padding: 13px 0; border-bottom: 1px solid #f0f0f0; }
+  .company-row:last-child { border-bottom: none; }
+  .company-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .company-ticker { font-size: 15px; font-weight: 600; color: #111; }
+  .company-price { font-size: 13px; color: #444; }
+  .price-up { color: #1a7a3a; }
+  .price-down { color: #b81c1c; }
+  .company-news-item { font-size: 14px; color: #333; margin-bottom: 5px; padding-left: 12px; position: relative; }
+  .company-news-item::before { content: "\00b7"; position: absolute; left: 0; color: #aaa; }
+  .company-news-item a { color: #1a56cc; text-decoration: none; font-size: 12px; margin-left: 6px; }
+  .company-news-item a:hover { text-decoration: underline; }
+  .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 32px; }
+  .appendix-table th { text-align: left; font-size: 12px; font-weight: 600; color: #999; padding: 0 12px 8px 0; border-bottom: 1px solid #e5e5e5; }
+  .appendix-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid #f5f5f5; color: #333; vertical-align: top; }
+  .appendix-table tr:last-child td { border-bottom: none; }
+  .ticker-cell { font-weight: 600; color: #111; }
+  .implication { color: #777; font-size: 12px; }
+  .radar-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .radar-table th { text-align: left; font-size: 12px; font-weight: 600; color: #999; padding: 0 12px 8px 0; border-bottom: 1px solid #e5e5e5; }
+  .radar-cell-list { padding-left: 14px; margin: 0; } .radar-cell-list li { margin-bottom: 4px; }
+  .radar-table td { padding: 10px 12px 10px 0; border-bottom: 1px solid #f5f5f5; color: #333; vertical-align: top; }
+  .radar-table tr:last-child td { border-bottom: none; }
+  .radar-risk-name { font-weight: 600; color: #111; }
+  .radar-risk-scope { font-size: 11px; color: #999; margin-top: 2px; }
+  .sev-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.3px; }
+  .sev-high { background: #fdecea; color: #b81c1c; }
+  .sev-med { background: #fdf3dc; color: #92600e; }
+  .sev-low { background: #e8f5ec; color: #1a7a3a; }
+  .radar-table td a { color: #1a56cc; text-decoration: none; font-size: 12px; }
+  .radar-table td a:hover { text-decoration: underline; }
+  .radar-quiet { font-size: 14px; color: #555; }
+  .status-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.3px; }
+  .st-rising { background: #fdecea; color: #b81c1c; }
+  .st-steady { background: #fdf3dc; color: #92600e; }
+  .st-easing { background: #e8f5ec; color: #1a7a3a; }
+  .appendix-table td.price-up { color: #1a7a3a; }
+  .appendix-table td.price-down { color: #b81c1c; }
+  .footnote { font-size: 12px; color: #888; margin-top: 12px; font-style: italic; }
+  .risk-legend { font-size: 12px; color: #888; margin-top: 12px; }
+  .risk-legend span { margin-right: 16px; }
+  .brief-footer { margin-top: 8px; padding-top: 20px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #aaa; line-height: 1.6; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="brief-header">
+    <div class="brief-eyebrow">Market Brief &middot; Wednesday, August 26</div>
+    <div class="brief-title">Stocks marked time as sticky PCE landed in line and the whole tape waited on Nvidia tonight. Oil kept sliding toward $80 on Iran diplomacy, and the book's AI-networking sleeve broke higher while the megacaps eased.</div>
+    <ul class="brief-summary-list">
+      <li>Indexes muted into the print: S&amp;P 500 roughly flat near 7,676, Nasdaq -0.08% to 26,130.20, Dow -114 points (-0.21%) to 53,463.88</li>
+      <li>Core PCE rose 3.3% year over year and 0.2% on the month, in line and sticky; headline 3.7%, keeping the Fed patient rather than pushed toward a hike</li>
+      <li>Oil kept falling: WTI slid toward $80 and Brent near $89 on Iran diplomacy, Hormuz reopening talk, and rising OPEC supply; the standing oil tail loosened further</li>
+      <li>Long end steady: 10Y about 4.66%, 30Y about 5.19%, holding into Jackson Hole</li>
+      <li>Book movers: ANET +5.9% led on AI-networking demand; IREN -6.2% fell into tomorrow's print and UBER -2.3% and GOOGL -1.4% lagged. Next catalysts: Nvidia tonight, IREN Q4 Aug 27, Warsh at Jackson Hole Aug 28</li>
+    </ul>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#risk-radar">Portfolio Risk Radar</a></li>
+      <li><a href="#happening">What's Happening &amp; What to Watch</a></li>
+      <li><a href="#macro-gauge">Macro Risk Gauge</a></li>
+      <li><a href="#macro-themes">Live Macro Themes</a></li>
+      <li><a href="#calendar">This Week's Calendar</a></li>
+      <li><a href="#company-news">Company News</a></li>
+      <li><a href="#smart-money">Where Is Smart Money Investing?</a></li>
+      <li><a href="#appendix">Appendix: Portfolio Snapshot &amp; Key Risks</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1: PORTFOLIO RISK RADAR -->
+  <section id="risk-radar">
+    <div class="section-header"><span class="section-num">1</span>Portfolio Risk Radar</div>
+    <table class="radar-table">
+      <thead>
+        <tr><th>Risk</th><th>Details</th><th>Severity</th><th>Impact</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="radar-risk-name">Nvidia earnings binary tonight</div><div class="radar-risk-scope">MU, TSM, CRDO, IREN, ANET, CLS</div></td>
+          <td><ul class="radar-cell-list"><li>Nvidia reports after the close tonight; consensus sees revenue near $92B (about 95% growth) and about $2.09 EPS, with data center near $86B</li><li>The tape stayed muted all day waiting on the number, so positioning is coiled rather than reset going into it</li><li>The single biggest near-term factor for the book, six names read straight through <a href="https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/08/nvidia-earnings-preview-q2-2027">S&amp;P Global</a></li></ul></td>
+          <td><span class="sev-badge sev-high">High</span></td>
+          <td><ul class="radar-cell-list"><li>Guidance, not the beat, is the swing; a cautious outlook on infrastructure spend would reprice the whole hardware sleeve at once</li><li>Concentration cuts both ways, so a soft guide would amplify the drawdown across MU, TSM, ANET, CRDO, CLS and IREN together</li></ul></td>
+        </tr>
+        <tr>
+          <td><div class="radar-risk-name">IREN earnings binary tomorrow</div><div class="radar-risk-scope">IREN</div></td>
+          <td><ul class="radar-cell-list"><li>IREN reports Q4 tomorrow after the close; consensus sees revenue about $130M, down 30% year over year, and a loss near $0.55 against a $0.65 profit a year ago</li><li>The stock fell 6.2% today into the print and is down about 30% over three months, with more than 874,000 retail investors tracked as bearish</li><li>A high bar after the $2.8B in July AI cloud deals and the raised above-$4B ARR target <a href="https://www.tipranks.com/news/iren-stock-3-reasons-retail-investors-are-bearish-ahead-of-q4-earnings">TipRanks</a></li></ul></td>
+          <td><span class="sev-badge sev-med">Medium</span></td>
+          <td><ul class="radar-cell-list"><li>The raised ARR target needs flawless GPU delivery; any slip on timing or funding would hit a name that already carries heavy negative sentiment</li><li>Small weight at 3.7%, but high single-day volatility around the event</li></ul></td>
+        </tr>
+        <tr>
+          <td><div class="radar-risk-name">Sticky inflation, Fed hike tail</div><div class="radar-risk-scope">MACRO, whole book</div></td>
+          <td><ul class="radar-cell-list"><li>Core PCE held at 3.3% year over year and rose 0.2% on the month in July, in line but sticky and well above the 2% target</li><li>Core has sat at 3.3% since the Iran conflict began, keeping a hike on the table even as the read gives the Fed room for patience</li><li>The last inflation print before Warsh's Jackson Hole keynote Friday <a href="https://www.cnbc.com/2026/08/26/feds-preferred-inflation-gauge-shows-core-prices-rose-3point3percent-annually-in-july.html">CNBC</a></li></ul></td>
+          <td><span class="sev-badge sev-med">Medium</span></td>
+          <td><ul class="radar-cell-list"><li>Sticky core keeps real rates firm and caps the multiple on a high-growth book with little valuation cushion</li><li>The swing is Warsh's tone Friday, not the data itself, which came in as expected</li></ul></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 2: WHAT'S HAPPENING -->
+  <section id="happening">
+    <div class="section-header"><span class="section-num">2</span>What's Happening &amp; What to Watch</div>
+
+    <div class="sub-header">What's Happening</div>
+    <ul class="bullet-list">
+      <li><strong>The tape marked time into Nvidia.</strong> Stocks were muted all session as investors held fire before tonight's print, with the S&amp;P roughly flat near 7,676, the Nasdaq off 0.08%, and the Dow down 0.21%. The number after the close is the week's swing.</li>
+      <li><strong>Sticky PCE, in line.</strong> Core PCE rose 3.3% year over year and 0.2% on the month, matching forecasts, with headline at 3.7%. It stays above target but gives the Fed room for patience rather than pushing it toward a hike.</li>
+      <li><strong>Oil kept falling.</strong> WTI slid toward $80 and Brent to near $89, extending the Iran-diplomacy drop on Hormuz reopening talk and rising OPEC supply; the standing oil tail loosened for a second straight session.</li>
+      <li><strong>Yields held.</strong> The 10Y sat near 4.66% and the 30Y near 5.19%, steady into Jackson Hole with no fresh catalyst from the in-line inflation read.</li>
+      <li><strong>Trade noise stayed live.</strong> Combined US tariffs on Chinese chips are stacking toward roughly 70% with a pending 7.5% overcapacity layer, all framed ahead of the Sep 24 Trump-Xi summit; the market looked past it today.</li>
+      <li><strong>The book split.</strong> AI networking led with ANET +5.9%, while IREN -6.2% slid into tomorrow's print and UBER -2.3% and GOOGL -1.4% lagged; MU, CLS, TSM, NU and CRDO were little changed as the group waited on Nvidia.</li>
+    </ul>
+
+    <div class="sub-header">What to Watch</div>
+    <div class="watch-grid">
+      <div class="watch-block">
+        <div class="cal-category">Today</div>
+        <ul class="bullet-list">
+          <li>Nvidia earnings after the close, the swing read on the AI-capex cycle across six book names.</li>
+          <li>Oil and Iran diplomacy after another leg lower, the standing macro tail still easing.</li>
+          <li>Any read-through from the in-line PCE into Fed expectations before Jackson Hole.</li>
+        </ul>
+      </div>
+      <div class="watch-block">
+        <div class="cal-category">This Week</div>
+        <ul class="bullet-list">
+          <li>IREN Q4 Thursday after the close, the test of the above-$4B ARR ramp and the Microsoft deal.</li>
+          <li>Warsh's first Jackson Hole keynote as Fed chair Friday, the swing for the long end.</li>
+          <li>Initial jobless claims Thursday and the final GDP and durable goods reads for the labor and demand picture.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: MACRO RISK GAUGE -->
+  <section id="macro-gauge">
+    <div class="section-header"><span class="section-num">3</span>Macro Risk Gauge</div>
+    <div class="chart-full">
+      <div class="chart-box">
+        <div class="chart-label">10Y &amp; 30Y Treasury Yields vs WTI Crude (12 months)</div>
+        <canvas id="chartRates" height="120"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: LIVE MACRO THEMES -->
+  <section id="macro-themes">
+    <div class="section-header"><span class="section-num">4</span>Live Macro Themes</div>
+
+    <div class="theme-block">
+      <div class="theme-title">US-Iran &amp; Other Major Geopolitical Conflicts (Oil)</div>
+      <div class="theme-body">
+        The tail kept loosening. WTI slid toward $80 and Brent to near $89, extending yesterday's sharp drop as signs of US-Iran diplomacy, prospects of reopened transport through the Strait of Hormuz, and rising OPEC supply eased supply fears. Treasury Secretary Bessent is still pressing countries that trade with Iran to wind down links, so the pressure track has not gone away, and substantial crude still moves through Hormuz, which keeps a premium embedded. But the market is pricing a lower near-term chance of a supply shock, and for an unhedged long book that is a genuine tailwind, relieving the headline-inflation channel that has kept the Fed hawkish. A single Hormuz flare-up would reopen the tail fast.
+      </div>
+    </div>
+
+    <div class="theme-block">
+      <div class="theme-title">Fed, Interest Rates &amp; Inflation</div>
+      <div class="theme-body">
+        The last inflation read before Jackson Hole came in as expected and sticky. Core PCE held at 3.3% year over year and rose 0.2% on the month, with headline at 3.7%; core has now sat at 3.3% since the Iran conflict began. That keeps prices above target but does not force the Fed's hand, and commentary framed it as room for patience on hikes. The 10Y held near 4.66% and the 30Y near 5.19%. The two anchors now are Warsh's first Jackson Hole keynote as chair Friday and how he plans to lean on the long end, since he has signaled a rate hike is not his preferred inflation tool. Probabilistically, the base case stays no hike, with the tail in the tone rather than the data.
+      </div>
+    </div>
+
+    <div class="theme-block">
+      <div class="theme-title">Trade Wars</div>
+      <div class="theme-body">
+        The stack keeps building quietly. Combined Section 301 exposure on Chinese semiconductors is nearing 70% as officials prepare a new 7.5% overcapacity layer on top of the 50% sector rate and the 12.5% forced-labor tariff that took effect July 24, all staged ahead of the Sep 24 Trump-Xi summit. Broader new chip tariffs are still deferred to mid-2027, a sign the administration wants to cool hostilities near term. On export controls, H200 and MI325X sales stay case-by-case under BIS. Direct book exposure is limited and the tape shrugged today, but a mineral or power cutoff remains a supply-chain tail for the chip sleeve, and tariffs stay in the inflation story that anchors the Fed.
+      </div>
+    </div>
+
+    <div class="theme-block">
+      <div class="theme-title">AI</div>
+      <div class="theme-body">
+        Everything hinges on tonight. The complex stayed coiled into Nvidia's report, expected near $92B revenue and about $2.09 EPS with data center near $86B, up more than 50% year over year. Hyperscaler capex guides keep climbing, with the largest cloud names pointed at roughly $700B of AI spend in 2026, and ANET broke out 5.9% today on that open-Ethernet demand even before the print. The swing is guidance and any comment on the durability of that spend, which reads straight through to MU, TSM, ANET, CRDO, CLS, and IREN. That concentration is why the book carries its highest near-term factor risk tonight; a soft guide would hit six names at once, while a confident one would validate the sleeve's run.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: CALENDAR -->
+  <section id="calendar">
+    <div class="section-header"><span class="section-num">5</span>This Week's Calendar</div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Wednesday, Aug 26 (today)</div>
+      <div class="cal-category">Macro Data</div>
+      <ul class="cal-items">
+        <li>PCE price index, released with core at 3.3% year over year and 0.2% on the month, in line; headline 3.7%. Personal income and spending alongside.</li>
+      </ul>
+      <div class="cal-category">Company Events</div>
+      <ul class="cal-items">
+        <li>Nvidia Q2 earnings, after the close. Consensus near $92B revenue and about $2.09 EPS; the key AI-capex read for the book.</li>
+      </ul>
+    </div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Thursday, Aug 27</div>
+      <div class="cal-category">Macro Data</div>
+      <ul class="cal-items">
+        <li>Initial jobless claims, 8:30 AM ET. Q2 GDP third estimate and durable goods orders.</li>
+      </ul>
+      <div class="cal-category">Company Events</div>
+      <ul class="cal-items">
+        <li>IREN Q4 results, after the close. Consensus about $130M revenue (down 30%) and a $0.55 loss; the ARR ramp is the swing.</li>
+      </ul>
+      <div class="cal-category">Conferences</div>
+      <ul class="cal-items">
+        <li>Jackson Hole Economic Symposium opens, Aug 27 to 29.</li>
+      </ul>
+    </div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Friday, Aug 28</div>
+      <div class="cal-category">Conferences</div>
+      <ul class="cal-items">
+        <li>Warsh's first Jackson Hole keynote as Fed chair, Friday morning. The week's swing factor for the long end.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 6: COMPANY NEWS -->
+  <section id="company-news">
+    <div class="section-header"><span class="section-num">6</span>Company News</div>
+
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Alphabet (GOOGL)</span><span class="company-price">$342.00 <span class="price-down">-4.96 (-1.43%)</span></span></div>
+      <div class="company-news-item">Eased with the megacaps as money stayed on the sidelines into Nvidia, no fresh single-name catalyst. Waymo said it plans to launch robotaxi rides in Munich in 2027, its first EU city, extending the AV footprint; the antitrust cross-appeals stay the standing overhang.<a href="https://finance.yahoo.com/news/googles-antitrust-woes-alphabet-stock-140000782.html">Yahoo Finance</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Amazon (AMZN)</span><span class="company-price">$260.28 <span class="price-down">-0.78 (-0.30%)</span></span></div>
+      <div class="company-news-item">Slipped modestly with the megacaps, no single-name catalyst. The in-line PCE and steady spending data keep the shopper stable for now; AWS capex conversion stays the story into the AI-capex read tonight.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Meta Platforms (META)</span><span class="company-price">$576.14 <span class="price-up">+6.10 (+1.07%)</span></span></div>
+      <div class="company-news-item">Firmed against a flat tape but still below the $628 cost, no fresh news. The 29-state Oakland youth-safety trial runs its multi-week schedule with Zuckerberg set to testify; the capex-ROI debate stays the swing.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Uber (UBER)</span><span class="company-price">$78.49 <span class="price-down">-1.86 (-2.31%)</span></span></div>
+      <div class="company-news-item">Fell on a technical backdrop, with a January death cross still weighing even as the stock holds above its 200-day near $77; no fresh fundamental news. Down about 14% year to date; the robotaxi capital plan and $10B+ AV commitment stay the platform-model swing.<a href="https://www.benzinga.com/trading-ideas/movers/26/08/61445303/uber-stock-is-trading-lower-today-whats-going-on">Benzinga</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Nu Holdings (NU)</span><span class="company-price">$15.17 <span class="price-up">+0.03 (+0.20%)</span></span></div>
+      <div class="company-news-item">Little changed, no single-name news. The record Q2 (net income above $1B, ROE 33%) and the Mexico banking license frame the story; the Brazil and Mexico credit cycle stays the standing watch.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">TSMC (TSM)</span><span class="company-price">$417.69 <span class="price-up">+0.29 (+0.07%)</span></span></div>
+      <div class="company-news-item">Flat into Nvidia after holding this week's gains, fundamentals intact with July revenue up 44.7% and a stepped-up Q3 outlook. The Arizona buildout and Sony image-sensor JV stay on track; the multiple moves with the group and tonight's read.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Arista Networks (ANET)</span><span class="company-price">$202.25 <span class="price-up">+11.30 (+5.92%)</span></span></div>
+      <div class="company-news-item">Led the book higher, the best mover among large caps, on sustained AI-networking demand as data centers shift to high-speed open Ethernet fabrics. High beta to the AI-infrastructure cycle both ways; the recent Q2 (+37.7% revenue) frames the run into Nvidia's read-through.<a href="https://247wallst.com/cards/arista-networks-closed-up-6-2-the-best-move-in-a-111-stock-anet-session-movers-01m0zv6sgsh0x25bda5wd0yxba">24/7 Wall St</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Credo Technology (CRDO)</span><span class="company-price">$226.49 <span class="price-down">-0.02 (-0.01%)</span></span></div>
+      <div class="company-news-item">Flat into the print despite the AI-networking bid elsewhere; the stock is up sharply over the past year and carries no valuation cushion when momentum fades. The Weaver OmniConnect product for AI memory bottlenecks remains the near-term catalyst.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">IREN Limited (IREN)</span><span class="company-price">$39.58 <span class="price-down">-2.63 (-6.23%)</span></span></div>
+      <div class="company-news-item">Fell hard into its Aug 27 print as bearish positioning built; consensus sees Q4 revenue about $130M (down 30%) and a $0.55 loss, with more than 874,000 retail investors tracked as bearish. The July $2.8B in AI cloud deals and the above-$4B ARR target set a high bar.<a href="https://www.tipranks.com/news/iren-stock-3-reasons-retail-investors-are-bearish-ahead-of-q4-earnings">TipRanks</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Micron (MU)</span><span class="company-price">$938.40 <span class="price-up">+5.41 (+0.58%)</span></span></div>
+      <div class="company-news-item">Steadied after early weakness even with the Netlist overhang unresolved; 2026 HBM is sold out at agreed prices, including HBM4. Netlist's new ITC and federal-court cases over DDR5 RDIMMs seek US exclusion orders on some Micron memory, the live risk into the Nvidia read.<a href="https://www.law360.com/articles/2513213/netlist-targets-micron-hpe-after-huge-samsung-ip-deal">Law360</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Celestica (CLS)</span><span class="company-price">$307.32 <span class="price-up">+0.46 (+0.15%)</span></span></div>
+      <div class="company-news-item">Held its recent gains into Nvidia, no single-name news. Concentration and the recent $3B dilution digestion remain the standing watch items into the AI-hardware cycle.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Tesla (TSLA)</span><span class="company-price">$345.82 <span class="price-down">-4.41 (-1.26%)</span></span></div>
+      <div class="company-news-item">Eased with the megacaps, no fresh catalyst. The China recall of nearly 3M vehicles and margin pressure stay the overhang; robotaxi cadence drives the story. Held for a friend, not a book position.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: SMART MONEY -->
+  <section id="smart-money">
+    <div class="section-header"><span class="section-num">7</span>Where Is Smart Money Investing?</div>
+    <div class="radar-quiet">No covered-name transaction clearly cleared the filters in the seven-day window (politicians &gt;$50K, insiders &gt;$1M).</div>
+    <div class="footnote">
+      Congressional trackers continue to show AI-tilted exposure to GOOGL, AMZN, and NVDA among the most active filers, but no covered-name Periodic Transaction Report above $50K is disclosed inside the past-seven-day window. On insiders, recent covered-name Form 4 activity looks like routine executive filings (option and RSU-linked), none above the $1M threshold this run. The section is shown for completeness rather than tabled.
+    </div>
+  </section>
+
+  <!-- SECTION 8: APPENDIX -->
+  <section id="appendix">
+    <div class="section-header"><span class="section-num">8</span>Appendix: Portfolio Snapshot &amp; Key Risks</div>
+
+    <div class="sub-header">Portfolio Snapshot</div>
+    <table class="appendix-table" style="margin-bottom:6px;">
+      <thead><tr><th>Ticker</th><th>Weight</th><th>Avg Cost</th><th>Last Close</th><th>Total Return</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker-cell">GOOGL</td><td>17.7%</td><td>$179.04</td><td>$342.00</td><td class="price-up">+91.0%</td></tr>
+        <tr><td class="ticker-cell">AMZN</td><td>11.9%</td><td>$221.16</td><td>$260.28</td><td class="price-up">+17.7%</td></tr>
+        <tr><td class="ticker-cell">META</td><td>11.3%</td><td>$628.06</td><td>$576.14</td><td class="price-down">-8.3%</td></tr>
+        <tr><td class="ticker-cell">UBER</td><td>10.3%</td><td>$81.75</td><td>$78.49</td><td class="price-down">-4.0%</td></tr>
+        <tr><td class="ticker-cell">NU</td><td>6.8%</td><td>$12.95</td><td>$15.17</td><td class="price-up">+17.1%</td></tr>
+        <tr><td class="ticker-cell">TSM</td><td>6.3%</td><td>$300.13</td><td>$417.69</td><td class="price-up">+39.2%</td></tr>
+        <tr><td class="ticker-cell">ANET</td><td>5.8%</td><td>$128.53</td><td>$202.25</td><td class="price-up">+57.4%</td></tr>
+        <tr><td class="ticker-cell">CRDO</td><td>3.9%</td><td>$182.32</td><td>$226.49</td><td class="price-up">+24.2%</td></tr>
+        <tr><td class="ticker-cell">IREN</td><td>3.7%</td><td>$61.92</td><td>$39.58</td><td class="price-down">-36.1%</td></tr>
+        <tr><td class="ticker-cell">MU</td><td>3.6%</td><td>$678.00</td><td>$938.40</td><td class="price-up">+38.4%</td></tr>
+        <tr><td class="ticker-cell">CLS</td><td>1.2%</td><td>$355.17</td><td>$307.32</td><td class="price-down">-13.5%</td></tr>
+        <tr><td class="ticker-cell">CASH</td><td>17.5%</td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <div class="footnote" style="margin-top:4px;margin-bottom:32px;">Weights and average costs from the Aug 11 snapshot. Last close and total return use today's Aug 26 session prices. Total return excludes dividends. TSLA is covered but not held.</div>
+
+    <div class="sub-header">Key Risks</div>
+
+    <table class="appendix-table">
+      <thead><tr><th>Ticker</th><th>Risk</th><th>Status</th><th>Why It Matters</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>AI capex sustainability, Nvidia binary</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>The tape coiled into tonight's print; the guide is the swing and a cautious outlook would reprice six book names at once. Nvidia Aug 26</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>Fed policy, hike tail vs sticky core</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Core PCE held at 3.3%, in line but sticky; the data gives room for patience, so the swing is Warsh's tone. Jackson Hole keynote Aug 28</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>US consumer demand deterioration</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>In-line spending kept the shopper stable after yesterday's soft confidence read; a stretched consumer still pressures the consumer sleeve if it turns</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>Trade policy, China chip tariff stack</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Combined Section 301 exposure nears 70% with a pending 7.5% overcapacity layer ahead of the Sep 24 Trump-Xi summit; a supply-chain tail for the chip sleeve</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>Long-end yields, term-premium shock</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>The 10Y held near 4.66% and the 30Y near 5.19% into Jackson Hole; steady for now, with Warsh's long-end plan the read. Aug 28</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>US-Iran / Hormuz, oil supply shock</td><td><span class="status-badge st-easing">&darr; Easing</span></td><td>WTI slid toward $80 for a second session on Iran diplomacy and rising OPEC supply; the premium keeps loosening, though a Hormuz flare-up would reopen the tail</td></tr>
+        <tr><td><div class="ticker-cell">GOOGL</div><div class="radar-risk-scope">Alphabet</div></td><td>Capex to FCF conversion, antitrust appeals</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Largest position at 17.7% and the steadiest megacap. Big capex reprices the multiple until it converts; the antitrust cross-appeals run 12 to 18 months</td></tr>
+        <tr><td><div class="ticker-cell">AMZN</div><div class="radar-risk-scope">Amazon</div></td><td>Consumer softening, FTC ad-pricing suit, capex</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>In-line spending steadied the demand read for now, layered on the AWS capex-conversion story. Summer 2026 FTC risk stays open</td></tr>
+        <tr><td><div class="ticker-cell">META</div><div class="radar-risk-scope">Meta Platforms</div></td><td>Capex ROI, litigation, regulation</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Firmed today but still below cost; the 29-state Oakland youth-safety trial runs multi-week with Zuckerberg set to testify, stacked on the capex-ROI debate</td></tr>
+        <tr><td><div class="ticker-cell">UBER</div><div class="radar-risk-scope">Uber</div></td><td>Robotaxi capital intensity, soft consumer</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Fell 2.3% on a technical backdrop with the death cross lingering; a soft consumer and $10B+ AV spend stay the swing on the multiple</td></tr>
+        <tr><td><div class="ticker-cell">NU</div><div class="radar-risk-scope">Nu Holdings</div></td><td>Brazil and Mexico credit cycle</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Little changed; the record Q2 and Mexico license de-risk the franchise, but the credit cycle stays the standing watch</td></tr>
+        <tr><td><div class="ticker-cell">TSM</div><div class="radar-risk-scope">TSMC</div></td><td>AI capex ceiling, overseas-fab margin dilution</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Flat into Nvidia; July revenue rose 44.7% and Q3 stepped up. Overseas fabs cap margin upside. Nvidia read-through Aug 26</td></tr>
+        <tr><td><div class="ticker-cell">ANET</div><div class="radar-risk-scope">Arista Networks</div></td><td>AI-networking concentration, rich multiple</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>Broke out 5.9% on AI-networking demand, leaving a richer multiple with less room if the Nvidia read disappoints. Read-through Aug 26</td></tr>
+        <tr><td><div class="ticker-cell">CRDO</div><div class="radar-risk-scope">Credo Technology</div></td><td>High-beta valuation, customer concentration</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Flat into the print; up sharply in a year with no valuation cushion when momentum fades despite the &gt;80% FY27 growth guide</td></tr>
+        <tr><td><div class="ticker-cell">IREN</div><div class="radar-risk-scope">IREN Limited</div></td><td>Execution vs the above-$4B ARR target, funding</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>Fell 6.2% into the print with heavy bearish positioning; consensus sees revenue down 30% and a loss. Flawless GPU delivery is the bar. Q4 Aug 27</td></tr>
+        <tr><td><div class="ticker-cell">MU</div><div class="radar-risk-scope">Micron</div></td><td>Memory pricing, patent action, China</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Steadied today but the Netlist ITC and federal-court actions on DDR5 seeking US exclusion orders stay unresolved. Nvidia read-through Aug 26</td></tr>
+        <tr><td><div class="ticker-cell">CLS</div><div class="radar-risk-scope">Celestica</div></td><td>Valuation, dilution digestion, concentration</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Held its gains into Nvidia. Valuation-after-strong-Q2 and the $3B dilution digestion are the watch items</td></tr>
+        <tr><td><div class="ticker-cell">TSLA</div><div class="radar-risk-scope">Tesla</div></td><td>Auto gross margin, robotaxi cadence</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Held for a friend, not a book position. The China recall and margin pressure stay the overhang; robotaxi cadence drives it</td></tr>
+      </tbody>
+    </table>
+    <div class="risk-legend">
+      <span class="status-badge st-rising">&uarr; Rising</span> <span class="status-badge st-steady">&mdash; Steady</span> <span class="status-badge st-easing">&darr; Easing</span>
+    </div>
+  </section>
+
+  <div class="brief-footer">
+    Generated August 26, 2026. Prices are the latest available session prices from Yahoo Finance. Coverage derived from __Portfolio 2026-08-11.xlsx, modified Aug 11 14:47 ET. No names added or dropped since the prior run. For personal use only. Data from Yahoo Finance and web search. Index levels are Yahoo Finance session values. Chart series are monthly closes. Feb and Mar 2026 WTI points are carried forward from the prior brief because Yahoo returned no monthly close for those two months.
+  </div>
+
+</div>
+
+<script>
+const labels = ['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'];
+
+new Chart(document.getElementById('chartRates'), {
+  type: 'line',
+  data: { labels, datasets: [
+    { label: '10Y Yield (%)', data: [4.15, 4.10, 4.02, 4.16, 4.24, 3.96, 4.31, 4.39, 4.45, 4.42, 4.74, 4.66],
+      borderColor: '#1a56cc', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+    { label: '30Y Yield (%)', data: [4.73, 4.67, 4.66, 4.84, 4.87, 4.63, 4.89, 4.99, 4.99, 4.90, 5.28, 5.19],
+      borderColor: '#7c3aed', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4, 3], pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+    { label: 'WTI ($/bbl)', data: [62.37, 60.98, 58.55, 57.42, 65.21, 67.02, 101.38, 105.07, 87.36, 69.50, 84.67, 81.00],
+      borderColor: '#cc6600', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' }
+  ]},
+  options: {
+    responsive: true,
+    plugins: { legend: { display: true, labels: { font: { size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { font: { size: 10 }, maxTicksLimit: 12 }, grid: { display: false } },
+      y: { ticks: { font: { size: 10 } }, grid: { color: '#f0f0f0' }, title: { display: true, text: 'Yield %', font: { size: 10 } } },
+      y1: { position: 'right', ticks: { font: { size: 10 } }, grid: { display: false }, title: { display: true, text: 'WTI $/bbl', font: { size: 10 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
