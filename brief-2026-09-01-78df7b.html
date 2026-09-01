@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sep 1 Market Brief</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #ffffff; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #111111; font-size: 14px; line-height: 1.6; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 32px; }
+  .toc { margin-bottom: 40px; padding: 16px 20px; background: #f5f5f5; border-radius: 6px; }
+  .toc-title { font-size: 16px; font-weight: 600; color: #111; margin-bottom: 10px; }
+  .toc ol { padding-left: 18px; }
+  .toc li { font-size: 13px; margin-bottom: 4px; }
+  .toc a { color: #111; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .brief-header { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 2px solid #111; }
+  .brief-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #888; margin-bottom: 8px; }
+  .brief-title { font-size: 26px; font-weight: 600; line-height: 1.3; }
+  .brief-summary-list { padding-left: 18px; margin-top: 12px; }
+  .brief-summary-list li { font-size: 14px; color: #555; margin-bottom: 5px; line-height: 1.5; }
+  .brief-summary { color: #555; font-weight: 400; font-size: 15px; margin-top: 12px; line-height: 1.55; }
+  .commentary { margin-bottom: 40px; padding: 16px 20px; background: #fffbeb; border-left: 3px solid #b8860b; border-radius: 0 6px 6px 0; }
+  .commentary-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #92400e; margin-bottom: 6px; }
+  .commentary-body { font-size: 14px; color: #333; line-height: 1.6; }
+  section { margin-bottom: 48px; }
+  .section-header { font-size: 19px; font-weight: 600; color: #111; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 1px solid #e5e5e5; }
+  .section-num { color: #bbb; margin-right: 8px; }
+  .sub-header { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 8px; }
+  .bullet-list { padding-left: 18px; margin-bottom: 20px; }
+  .bullet-list li { margin-bottom: 6px; font-size: 14px; }
+  .watch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .chart-full { margin-bottom: 24px; }
+  .chart-box { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 16px; }
+  .chart-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 12px; }
+  .theme-block { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #f0f0f0; }
+  .theme-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .theme-title { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 6px; }
+  .theme-body { font-size: 14px; color: #333; line-height: 1.6; }
+  .cal-day { margin-bottom: 16px; }
+  .cal-day-head { font-size: 15px; font-weight: 600; color: #222; margin-bottom: 8px; }
+  .cal-category { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin: 6px 0 3px; }
+  .cal-items { padding-left: 14px; }
+  .cal-items li { font-size: 13px; color: #444; margin-bottom: 3px; }
+  .company-row { padding: 13px 0; border-bottom: 1px solid #f0f0f0; }
+  .company-row:last-child { border-bottom: none; }
+  .company-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+  .company-ticker { font-size: 15px; font-weight: 600; color: #111; }
+  .company-price { font-size: 13px; color: #444; }
+  .price-up { color: #1a7a3a; }
+  .price-down { color: #b81c1c; }
+  .company-news-item { font-size: 14px; color: #333; margin-bottom: 5px; padding-left: 12px; position: relative; }
+  .company-news-item::before { content: "\00b7"; position: absolute; left: 0; color: #aaa; }
+  .company-news-item a { color: #1a56cc; text-decoration: none; font-size: 12px; margin-left: 6px; }
+  .company-news-item a:hover { text-decoration: underline; }
+  .appendix-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 32px; }
+  .appendix-table th { text-align: left; font-size: 12px; font-weight: 600; color: #999; padding: 0 12px 8px 0; border-bottom: 1px solid #e5e5e5; }
+  .appendix-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid #f5f5f5; color: #333; vertical-align: top; }
+  .appendix-table tr:last-child td { border-bottom: none; }
+  .ticker-cell { font-weight: 600; color: #111; }
+  .implication { color: #777; font-size: 12px; }
+  .radar-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .radar-table th { text-align: left; font-size: 12px; font-weight: 600; color: #999; padding: 0 12px 8px 0; border-bottom: 1px solid #e5e5e5; }
+  .radar-cell-list { padding-left: 14px; margin: 0; } .radar-cell-list li { margin-bottom: 4px; }
+  .radar-table td { padding: 10px 12px 10px 0; border-bottom: 1px solid #f5f5f5; color: #333; vertical-align: top; }
+  .radar-table tr:last-child td { border-bottom: none; }
+  .radar-risk-name { font-weight: 600; color: #111; }
+  .radar-risk-scope { font-size: 11px; color: #999; margin-top: 2px; }
+  .sev-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.3px; }
+  .sev-high { background: #fdecea; color: #b81c1c; }
+  .sev-med { background: #fdf3dc; color: #92600e; }
+  .sev-low { background: #e8f5ec; color: #1a7a3a; }
+  .radar-table td a { color: #1a56cc; text-decoration: none; font-size: 12px; }
+  .radar-table td a:hover { text-decoration: underline; }
+  .radar-quiet { font-size: 14px; color: #555; }
+  .status-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.3px; }
+  .st-rising { background: #fdecea; color: #b81c1c; }
+  .st-steady { background: #fdf3dc; color: #92600e; }
+  .st-easing { background: #e8f5ec; color: #1a7a3a; }
+  .appendix-table td.price-up { color: #1a7a3a; }
+  .appendix-table td.price-down { color: #b81c1c; }
+  .footnote { font-size: 12px; color: #888; margin-top: 12px; font-style: italic; }
+  .risk-legend { font-size: 12px; color: #888; margin-top: 12px; }
+  .risk-legend span { margin-right: 16px; }
+  .brief-footer { margin-top: 8px; padding-top: 20px; border-top: 1px solid #e5e5e5; font-size: 11px; color: #aaa; line-height: 1.6; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="brief-header">
+    <div class="brief-eyebrow">Market Brief &middot; Tuesday, September 1</div>
+    <div class="brief-title">The US-Iran fight escalated over the long weekend and two tankers were struck exiting Hormuz, sending oil up almost 6% and pushing yields higher. Softer ISM and JOLTS data did not help, so September starts risk-off with all three indexes lower and the AI interconnect sleeve leading the book down.</div>
+    <ul class="brief-summary-list">
+      <li>Oil jumped again: US strikes hit the Iranian mainland and two crude tankers were struck exiting the Strait of Hormuz Monday night. WTI rose about 5.7% to roughly $90.7, Brent to about $95</li>
+      <li>Indexes fell across the board: S&amp;P 500 -0.71% to 7,631.47, Nasdaq -1.03% to 26,099.77, Dow -0.79% to 52,766.88</li>
+      <li>Data missed: ISM Manufacturing came in at 54.6 versus 55.2 expected and JOLTS openings also missed, yet rising oil keeps the inflation story alive. September hike odds sit near 65% to 68% on CME FedWatch</li>
+      <li>Yields rose with oil: 10Y about 4.80% (up roughly 4bp), 30Y about 5.27%. Book led lower by the interconnect and memory sleeve: CRDO -8.7%, ANET -3.3%, MU -2.6%, CLS -2.3%; META +1.1% was the lone green name</li>
+      <li>Next catalysts: Credo (CRDO) reports fiscal Q1 after the close tonight, ADP Wednesday, then the August jobs report Friday. Tesla's Cybercab launch lands Thursday in Austin</li>
+    </ul>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#risk-radar">Portfolio Risk Radar</a></li>
+      <li><a href="#happening">What's Happening &amp; What to Watch</a></li>
+      <li><a href="#macro-gauge">Macro Risk Gauge</a></li>
+      <li><a href="#macro-themes">Live Macro Themes</a></li>
+      <li><a href="#calendar">This Week's Calendar</a></li>
+      <li><a href="#company-news">Company News</a></li>
+      <li><a href="#smart-money">Where Is Smart Money Investing?</a></li>
+      <li><a href="#appendix">Appendix: Portfolio Snapshot &amp; Key Risks</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1: PORTFOLIO RISK RADAR -->
+  <section id="risk-radar">
+    <div class="section-header"><span class="section-num">1</span>Portfolio Risk Radar</div>
+    <table class="radar-table">
+      <thead>
+        <tr><th>Risk</th><th>Details</th><th>Severity</th><th>Impact</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="radar-risk-name">Oil supply shock escalated</div><div class="radar-risk-scope">MACRO, whole book</div></td>
+          <td><ul class="radar-cell-list"><li>US strikes hit the Iranian mainland over the weekend, including IRGC-tied sites near Bandar Abbas and Chabahar, and Iran retaliated on US bases in Jordan</li><li>Two crude tankers, one Saudi (Bahri) and one South Korean (Sinokor), were struck by projectiles exiting Hormuz Monday night; no casualties reported</li><li>WTI rose about 5.7% to roughly $90.7 and Brent to about $95 as the supply premium widened <a href="https://www.upi.com/Top_News/World-News/2026/09/01/iran-two-oil-tankers-struck-strait-of-hormuz/7601788274469/">UPI</a></li></ul></td>
+          <td><span class="sev-badge sev-high">High</span></td>
+          <td><ul class="radar-cell-list"><li>The book holds no energy hedge, so a higher crude path is pure cost and inflation pressure that hardens the hawkish Fed read</li><li>A sustained spike lifts the discount rate on the whole growth book and compresses multiples with no offset</li></ul></td>
+        </tr>
+        <tr>
+          <td><div class="radar-risk-name">September hike stays the majority bet</div><div class="radar-risk-scope">MACRO, whole book</div></td>
+          <td><ul class="radar-cell-list"><li>ISM Manufacturing missed at 54.6 versus 55.2 and JOLTS openings also came in soft, which would normally cool the hike case</li><li>Rising oil offsets the softer data and keeps underlying inflation worries elevated, so hike odds held near 65% to 68% on CME FedWatch</li><li>The 10Y rose to about 4.80% and the 30Y to about 5.27% <a href="https://www.techtimes.com/articles/326153/20260901/fed-rate-hike-68-odds-opens-five-day-window-variable-rate-borrowers.htm">TechTimes</a></li></ul></td>
+          <td><span class="sev-badge sev-high">High</span></td>
+          <td><ul class="radar-cell-list"><li>A live hike plus a firmer long end compress the multiple on a high-growth book that carries little valuation cushion</li><li>Resolves at the Sep 15-16 FOMC; the jobs report Friday is the last major input</li></ul></td>
+        </tr>
+        <tr>
+          <td><div class="radar-risk-name">Credo earnings binary tonight</div><div class="radar-risk-scope">CRDO</div></td>
+          <td><ul class="radar-cell-list"><li>CRDO fell 8.7% to $206.63 ahead of its fiscal Q1 2027 report after the close, the book's worst mover on the day</li><li>The slide followed a reiterated sell call flagging a stretched valuation and execution risk into the print</li><li>Sector profit-taking in AI-connectivity names amplified the move <a href="https://www.tipranks.com/news/catalyst/credo-technology-stock-hit-by-harsh-sell-call">TipRanks</a></li></ul></td>
+          <td><span class="sev-badge sev-high">High</span></td>
+          <td><ul class="radar-cell-list"><li>Small 3.9% weight, but a high-beta name with no valuation cushion can move sharply either way on the print</li><li>Guidance on the FY27 optical ramp is the swing; a miss or soft guide extends today's derate</li></ul></td>
+        </tr>
+        <tr>
+          <td><div class="radar-risk-name">Interconnect and memory sleeve derate</div><div class="radar-risk-scope">CRDO, ANET, MU, CLS</div></td>
+          <td><ul class="radar-cell-list"><li>The AI-hardware sleeve led the book lower as the rate move met profit-taking after a strong August: CRDO -8.7%, ANET -3.3%, MU -2.6%, CLS -2.3%</li><li>No fresh negative fundamental news on ANET, MU or CLS; the move is multiple, not estimates</li><li>Rising oil and yields raised the discount rate on the richest-multiple part of the book <a href="https://finance.yahoo.com/markets/live/stock-market-today-tuesday-september-1-dow-sp-500-nasdaq-080617884.html">Yahoo Finance</a></li></ul></td>
+          <td><span class="sev-badge sev-med">Medium</span></td>
+          <td><ul class="radar-cell-list"><li>Combined the four sleeves are about 14.5% of the book, so a shared derate is a real drag when rates lead</li><li>These names carry the least cushion and fall fastest when the discount rate rises; fundamentals look intact</li></ul></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 2: WHAT'S HAPPENING -->
+  <section id="happening">
+    <div class="section-header"><span class="section-num">2</span>What's Happening &amp; What to Watch</div>
+
+    <div class="sub-header">What's Happening</div>
+    <ul class="bullet-list">
+      <li><strong>The oil tail widened.</strong> US strikes hit the Iranian mainland over the weekend and two crude tankers were struck exiting the Strait of Hormuz Monday night, with Iran retaliating on US bases in Jordan. WTI rose about 5.7% to roughly $90.7. This is a supply-driven move that feeds straight into the inflation debate.</li>
+      <li><strong>Data missed but did not ease the Fed read.</strong> ISM Manufacturing came in at 54.6 versus 55.2 expected and JOLTS openings also missed. Softer growth would normally cool hike odds, but rising oil kept them near 65% to 68% on CME FedWatch, so the September call stays live.</li>
+      <li><strong>The tape sold off broadly.</strong> All three indexes fell, with the S&amp;P off 0.71%, the Nasdaq off 1.03% and the Dow off 0.79% as higher oil and yields pressured risk. Momentum has softened after a strong summer, though the S&amp;P sits close to record territory.</li>
+      <li><strong>The interconnect sleeve led the book down.</strong> CRDO fell 8.7% into tonight's earnings, and ANET, MU and CLS each slid 2% to 3% on profit-taking as the discount rate rose. The moves are multiple-driven, not fresh estimate cuts.</li>
+      <li><strong>Meta held up alone.</strong> META rose 1.1% against the risk-off tape, the only green name in the book. The megacaps were mixed, with GOOGL and AMZN down modestly and less exposed than the high-beta sleeve.</li>
+      <li><strong>The robotaxi read-through builds.</strong> Tesla's Cybercab launches Thursday in Austin, and Clark County approved Tesla, Waymo and Uber for up to 8,000 driverless vehicles. Tesla drew the largest allocation; Uber added 1,000 through Motional and Zoox.</li>
+    </ul>
+
+    <div class="sub-header">What to Watch</div>
+    <div class="watch-grid">
+      <div class="watch-block">
+        <div class="cal-category">Today</div>
+        <ul class="bullet-list">
+          <li>Credo (CRDO) fiscal Q1 report after the close, with FY27 optical guidance the swing.</li>
+          <li>Whether crude holds its gain and any further US or Iranian escalation around Hormuz.</li>
+          <li>The long end after the move higher in yields, and whether the hike repricing sticks.</li>
+        </ul>
+      </div>
+      <div class="watch-block">
+        <div class="cal-category">This Week</div>
+        <ul class="bullet-list">
+          <li>ADP Wednesday and the August jobs report Friday, the last big inputs before the FOMC.</li>
+          <li>Oil and Hormuz headlines, with the supply premium back in the price.</li>
+          <li>Tesla's Cybercab launch Thursday in Austin as the AV read-through for Uber.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: MACRO RISK GAUGE -->
+  <section id="macro-gauge">
+    <div class="section-header"><span class="section-num">3</span>Macro Risk Gauge</div>
+    <div class="chart-full">
+      <div class="chart-box">
+        <div class="chart-label">10Y &amp; 30Y Treasury Yields vs WTI Crude (12 months)</div>
+        <canvas id="chartRates" height="120"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: LIVE MACRO THEMES -->
+  <section id="macro-themes">
+    <div class="section-header"><span class="section-num">4</span>Live Macro Themes</div>
+
+    <div class="theme-block">
+      <div class="theme-title">US-Iran &amp; Other Major Geopolitical Conflicts (Oil)</div>
+      <div class="theme-body">
+        The tail widened over the long weekend. US strikes hit the Iranian mainland, including IRGC-tied sites near Bandar Abbas and Chabahar, and Iran retaliated on US bases in Jordan, ending the brief calm. Two crude tankers, one run by Saudi Arabia's Bahri and one by South Korea's Sinokor, were struck by projectiles exiting the Strait of Hormuz Monday night, with no casualties but a clear signal that shipping through the strait is again at risk. WTI rose about 5.7% to roughly $90.7 and Brent to about $95. A large share of global crude still transits Hormuz, so the supply premium is firmly back in the price and a further flare-up would extend it. For an unhedged long book the near-term supply-shock odds have moved from moderate to elevated, and the read-through runs through inflation and the Fed rather than any single holding.
+      </div>
+    </div>
+
+    <div class="theme-block">
+      <div class="theme-title">Fed, Interest Rates &amp; Inflation</div>
+      <div class="theme-body">
+        Still hawkish, and oil is doing the work. Today's data actually softened: ISM Manufacturing missed at 54.6 versus 55.2 and JOLTS openings came in light, which in a normal week would cool the hike case. Rising crude offset it by keeping underlying inflation worries elevated, and CME FedWatch odds for a September hike held near 65% to 68%, more than double the pre-Warsh read, though futures still sit closer to a coin flip so the call is live but not settled. The 10Y rose to about 4.80% and the 30Y to about 5.27%, with the policy rate at 3.5% to 3.75%. ADP Wednesday and the August jobs report Friday are the last major inputs before the Sep 15-16 FOMC. Probabilistically September still leans toward a hike, and that repricing is the swing for the book's multiple.
+      </div>
+    </div>
+
+    <div class="theme-block">
+      <div class="theme-title">Trade Wars</div>
+      <div class="theme-body">
+        The stack keeps building quietly. Combined Section 301 exposure on Chinese semiconductors is near 70% as officials prepare a 7.5% overcapacity layer on top of the existing sector and forced-labor duties, staged ahead of the Sep 24 Trump-Xi summit in Washington. The White House also added a 15% tariff and price floors on polysilicon in August. Broader new chip tariffs stay deferred to June 2027, a sign the administration wants to cool hostilities near term. Direct book exposure is limited, but tariff risk feeds the same inflation story that just turned the Fed more hawkish, and a mineral or power cutoff stays a supply-chain tail for the chip sleeve.
+      </div>
+    </div>
+
+    <div class="theme-block">
+      <div class="theme-title">AI</div>
+      <div class="theme-body">
+        Demand intact, but today the multiple lost. With oil and yields rising, the richest-multiple part of the book took the hit: CRDO fell 8.7% into tonight's print, and ANET, MU and CLS each slid 2% to 3% on profit-taking rather than any estimate cut. The order book still looks strong, with Micron's sold-out 2026 HBM capacity, Arista's AI-networking ramp and the AWS GPU commitments underpinning volume. The open question remains margins and multiples, not demand: the sleeve derates fast when the discount rate rises, as today showed. Credo's report after the close is the near-term test of whether the fundamental story is still outrunning the valuation.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: CALENDAR -->
+  <section id="calendar">
+    <div class="section-header"><span class="section-num">5</span>This Week's Calendar</div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Tuesday, Sep 1 (today)</div>
+      <div class="cal-category">Macro Data</div>
+      <ul class="cal-items">
+        <li>ISM Manufacturing PMI (Aug): actual 54.6 versus 55.2 expected. JOLTS job openings (Jul) also missed. Construction spending and S&amp;P Global Manufacturing PMI also out.</li>
+      </ul>
+      <div class="cal-category">Company Events</div>
+      <ul class="cal-items">
+        <li>Credo Technology (CRDO) fiscal Q1 2027 earnings, after the close.</li>
+      </ul>
+    </div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Wednesday, Sep 2</div>
+      <div class="cal-category">Macro Data</div>
+      <ul class="cal-items">
+        <li>ADP private employment (Aug), 8:15 AM ET, as a jobs-report preview.</li>
+      </ul>
+    </div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Thursday, Sep 3</div>
+      <div class="cal-category">Macro Data</div>
+      <ul class="cal-items">
+        <li>ISM Services PMI (Aug), 10:00 AM ET. Weekly jobless claims, trade balance and factory orders at 8:30 AM ET.</li>
+      </ul>
+      <div class="cal-category">Company Events</div>
+      <ul class="cal-items">
+        <li>Tesla (TSLA) Cybercab launch event in Austin. Tracked name, AV read-through for Uber.</li>
+      </ul>
+    </div>
+
+    <div class="cal-day">
+      <div class="cal-day-head">Friday, Sep 4</div>
+      <div class="cal-category">Macro Data</div>
+      <ul class="cal-items">
+        <li>August Employment Situation, nonfarm payrolls and unemployment rate, 8:30 AM ET. The week's main event and the last major input before the FOMC.</li>
+      </ul>
+    </div>
+    <div class="footnote" style="margin-top:2px;">Next week: markets are closed Monday, Sep 7 for Labor Day. The Sep 15-16 FOMC follows.</div>
+  </section>
+
+  <!-- SECTION 6: COMPANY NEWS -->
+  <section id="company-news">
+    <div class="section-header"><span class="section-num">6</span>Company News</div>
+
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Alphabet (GOOGL)</span><span class="company-price">$335.02 <span class="price-down">-4.33 (-1.28%)</span></span></div>
+      <div class="company-news-item">Eased with the risk-off tape but held up better than the high-beta sleeve, with no fresh single-name catalyst. The antitrust cross-appeals stay the standing overhang, running 12 to 18 months.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Amazon (AMZN)</span><span class="company-price">$254.92 <span class="price-down">-4.85 (-1.87%)</span></span></div>
+      <div class="company-news-item">Fell with the megacap group on the rate and oil move, still above the $221.16 cost. AWS capex and the GPU ramp stay the conversion story the market wants proven.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Meta Platforms (META)</span><span class="company-price">$578.54 <span class="price-up">+6.20 (+1.08%)</span></span></div>
+      <div class="company-news-item">The lone green name in the book, up 1.1% against the risk-off tape, though still below the $628 cost. Analysts view Meta most favorably among the large-cap platforms; the capex-ROI debate remains the swing on the multiple.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Uber (UBER)</span><span class="company-price">$75.24 <span class="price-down">-0.41 (-0.54%)</span></span></div>
+      <div class="company-news-item">Held in relatively well, down only 0.5%, as robotaxi news balanced the tape. Clark County approved Tesla, Waymo and Uber for up to 8,000 driverless vehicles, with Uber adding 1,000 through Motional and Zoox ahead of Tesla's Cybercab launch Thursday.<a href="https://seekingalpha.com/news/4637468-robotaxi-reveal-teslas-cybercab-takes-the-stage-next-week">Seeking Alpha</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Nu Holdings (NU)</span><span class="company-price">$14.46 <span class="price-down">-0.09 (-0.62%)</span></span></div>
+      <div class="company-news-item">Slipped modestly with the risk-off tape and no new single-name news. The CFO-transition overhang lingers with analysts split, and the Brazil and Mexico credit cycle stays the core watch.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">TSMC (TSM)</span><span class="company-price">$414.00 <span class="price-down">-1.32 (-0.32%)</span></span></div>
+      <div class="company-news-item">Nearly flat, the most resilient chip name on the day, no company-specific news. Fundamentals intact with 2026 growth guided above 30% in dollars; the multiple moves with the sector and the tariff headlines.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Arista Networks (ANET)</span><span class="company-price">$189.26 <span class="price-down">-6.43 (-3.29%)</span></span></div>
+      <div class="company-news-item">Fell 3.3% on profit-taking as the rate move hit the AI-hardware sleeve, no fresh negative news. The Q2 print and roughly $3.3B Q3 guide still frame the story; the rich multiple is the risk when the discount rate rises.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Credo Technology (CRDO)</span><span class="company-price">$206.63 <span class="price-down">-19.56 (-8.65%)</span></span></div>
+      <div class="company-news-item">The book's worst mover, down 8.7% ahead of tonight's fiscal Q1 report after a reiterated sell call flagged a stretched valuation and execution risk. FY26 revenue tripled to $1.3B and management calls FY27 an optical inflection point, but the stock carries no cushion into the print.<a href="https://www.tipranks.com/news/catalyst/credo-technology-stock-hit-by-harsh-sell-call">TipRanks</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">IREN Limited (IREN)</span><span class="company-price">$36.82 <span class="price-down">-0.30 (-0.79%)</span></span></div>
+      <div class="company-news-item">Steadied after last week's post-earnings slide, down only 0.8% with no fresh catalyst. AI cloud is now the majority of revenue and management calls 2026 capacity "largely sold out," but delivery and funding remain the whole story with the position down about 40% from cost.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Micron (MU)</span><span class="company-price">$933.44 <span class="price-down">-25.29 (-2.64%)</span></span></div>
+      <div class="company-news-item">Gave back 2.6% on profit-taking after August's run, no company-specific news. Sold-out 2026 HBM capacity and a wave of $1,000-plus targets still frame the bull case; the Netlist DDR5 litigation seeking US exclusion orders stays the live overhang, with fiscal Q4 results due Sep 30.<a href="https://www.fool.com/investing/2026/08/31/not-nvidia-not-amd-micron-could-be-septembers-bigg/">Motley Fool</a></div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Celestica (CLS)</span><span class="company-price">$292.59 <span class="price-down">-6.81 (-2.27%)</span></span></div>
+      <div class="company-news-item">Slid 2.3% with the hardware sleeve on the rate move, no company-specific news. Concentration and the recent $3B dilution digestion stay the standing watch items.</div>
+    </div>
+    <div class="company-row">
+      <div class="company-head"><span class="company-ticker">Tesla (TSLA)</span><span class="company-price">$356.09 <span class="price-down">-11.86 (-3.22%)</span></span></div>
+      <div class="company-news-item">Fell 3.2% with the risk-off tape, giving back some of Monday's Cybercab run-up ahead of Thursday's launch in Austin. Held for a friend, not a book position; it stays a useful read on the AV narrative that also drives Uber.<a href="https://www.teslarati.com/tesla-cybercab-launch-official-date-austin/">Teslarati</a></div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: SMART MONEY -->
+  <section id="smart-money">
+    <div class="section-header"><span class="section-num">7</span>Where Is Smart Money Investing?</div>
+    <div class="radar-quiet">No covered-name transaction clearly cleared the filters in the seven-day window (politicians &gt;$50K, insiders &gt;$1M).</div>
+    <div class="footnote">
+      Congressional trackers this week are dominated by late STOCK Act disclosures rather than fresh trades. Representative Tracey Mann disclosed spousal trades in GOOGL and META among other tech names, but the transactions are nearly two years old and fall well outside the seven-day window. On the insider side, no covered-name Form 4 above $1M posted inside the window. The section is shown for completeness rather than tabled.
+    </div>
+  </section>
+
+  <!-- SECTION 8: APPENDIX -->
+  <section id="appendix">
+    <div class="section-header"><span class="section-num">8</span>Appendix: Portfolio Snapshot &amp; Key Risks</div>
+
+    <div class="sub-header">Portfolio Snapshot</div>
+    <table class="appendix-table" style="margin-bottom:6px;">
+      <thead><tr><th>Ticker</th><th>Weight</th><th>Avg Cost</th><th>Last Close</th><th>Total Return</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker-cell">GOOGL</td><td>17.7%</td><td>$179.04</td><td>$335.02</td><td class="price-up">+87.1%</td></tr>
+        <tr><td class="ticker-cell">AMZN</td><td>11.9%</td><td>$221.16</td><td>$254.92</td><td class="price-up">+15.3%</td></tr>
+        <tr><td class="ticker-cell">META</td><td>11.3%</td><td>$628.06</td><td>$578.54</td><td class="price-down">-7.9%</td></tr>
+        <tr><td class="ticker-cell">UBER</td><td>10.3%</td><td>$81.75</td><td>$75.24</td><td class="price-down">-8.0%</td></tr>
+        <tr><td class="ticker-cell">NU</td><td>6.8%</td><td>$12.95</td><td>$14.46</td><td class="price-up">+11.6%</td></tr>
+        <tr><td class="ticker-cell">TSM</td><td>6.3%</td><td>$300.13</td><td>$414.00</td><td class="price-up">+37.9%</td></tr>
+        <tr><td class="ticker-cell">ANET</td><td>5.8%</td><td>$128.53</td><td>$189.26</td><td class="price-up">+47.3%</td></tr>
+        <tr><td class="ticker-cell">CRDO</td><td>3.9%</td><td>$182.32</td><td>$206.63</td><td class="price-up">+13.3%</td></tr>
+        <tr><td class="ticker-cell">IREN</td><td>3.7%</td><td>$61.92</td><td>$36.82</td><td class="price-down">-40.5%</td></tr>
+        <tr><td class="ticker-cell">MU</td><td>3.6%</td><td>$678.00</td><td>$933.44</td><td class="price-up">+37.7%</td></tr>
+        <tr><td class="ticker-cell">CLS</td><td>1.2%</td><td>$355.17</td><td>$292.59</td><td class="price-down">-17.6%</td></tr>
+        <tr><td class="ticker-cell">CASH</td><td>17.5%</td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <div class="footnote" style="margin-top:4px;margin-bottom:32px;">Weights and average costs from the Aug 11 snapshot. Last close and total return use today's Sep 1 session prices. Total return excludes dividends. TSLA is covered but not held.</div>
+
+    <div class="sub-header">Key Risks</div>
+
+    <table class="appendix-table">
+      <thead><tr><th>Ticker</th><th>Risk</th><th>Status</th><th>Why It Matters</th></tr></thead>
+      <tbody>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>US-Iran / Hormuz, oil supply shock</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>US hit the Iranian mainland and two tankers were struck exiting Hormuz; WTI up about 5.7% to roughly $90.7. The supply premium widened and feeds the inflation and Fed path</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>Fed policy, September hike tail</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>Hike odds held near 65% to 68% on FedWatch even after soft ISM and JOLTS, as oil keeps inflation worries alive. Resolves at the FOMC Sep 15-16</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>Long-end yields, term-premium shock</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>The 10Y rose to about 4.80% and the 30Y to about 5.27% with oil; a firmer long end caps the multiple on the growth book</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>AI capex sustainability</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Demand intact but the multiple lost today; CRDO, ANET, MU and CLS derated on the rate move, not estimate cuts. The swing is margins and multiples, not volume</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>US consumer demand deterioration</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>JOLTS openings softened and higher gasoline from the oil move pressures the consumer sleeve if it turns. Jobs report Sep 4</td></tr>
+        <tr><td><div class="ticker-cell">MACRO</div></td><td>Trade policy, China chip tariff stack</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Combined Section 301 exposure nears 70% with a pending 7.5% overcapacity layer ahead of the Sep 24 Trump-Xi summit; a supply-chain tail for the chip sleeve</td></tr>
+        <tr><td><div class="ticker-cell">GOOGL</div><div class="radar-risk-scope">Alphabet</div></td><td>Capex to FCF conversion, antitrust appeals</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Largest position at 17.7%; eased modestly and held up better than the high-beta sleeve. Big capex reprices the multiple until it converts; antitrust cross-appeals run 12 to 18 months</td></tr>
+        <tr><td><div class="ticker-cell">AMZN</div><div class="radar-risk-scope">Amazon</div></td><td>Capex intensity, consumer softening, FTC suit</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Fell with the megacap group; the AWS-Nvidia GPU deal lifts capex and the market wants the conversion. Summer 2026 FTC risk stays open</td></tr>
+        <tr><td><div class="ticker-cell">META</div><div class="radar-risk-scope">Meta Platforms</div></td><td>Capex ROI, litigation, regulation</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>The lone green name today; a reported teen-safety settlement relieved part of the legal overhang, and the stock is still below cost. Capex ROI is the swing</td></tr>
+        <tr><td><div class="ticker-cell">UBER</div><div class="radar-risk-scope">Uber</div></td><td>Robotaxi capital intensity, mobility margin</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Held in well, down only 0.5%, as robotaxi approvals balanced the tape. Cybercab Thursday is the AV read-through; the stock is below cost and the AV build is a cost before a payoff</td></tr>
+        <tr><td><div class="ticker-cell">NU</div><div class="radar-risk-scope">Nu Holdings</div></td><td>CFO transition, downgrades, credit cycle</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Slipped modestly; the CFO handoff overhang lingers with analysts split, but no new negative news. Brazil and Mexico credit is the core watch</td></tr>
+        <tr><td><div class="ticker-cell">TSM</div><div class="radar-risk-scope">TSMC</div></td><td>AI capex ceiling, overseas-fab margin dilution</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Most resilient chip name today, nearly flat; 2026 growth guided above 30% in dollars. Overseas fabs cap margin upside, but the order book is validated</td></tr>
+        <tr><td><div class="ticker-cell">ANET</div><div class="radar-risk-scope">Arista Networks</div></td><td>AI-networking concentration, rich multiple</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Fell 3.3% on profit-taking, no fresh negative news; a richer multiple leaves less room when the discount rate rises</td></tr>
+        <tr><td><div class="ticker-cell">CRDO</div><div class="radar-risk-scope">Credo Technology</div></td><td>Earnings binary, high-beta valuation, concentration</td><td><span class="status-badge st-rising">&uarr; Rising</span></td><td>Fell 8.7% into tonight's fiscal Q1 report on a sell call; no valuation cushion into the print, and FY27 optical guidance is the swing</td></tr>
+        <tr><td><div class="ticker-cell">IREN</div><div class="radar-risk-scope">IREN Limited</div></td><td>Execution vs the roughly $4B ARR target, funding</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Steadied after last week's post-earnings slide, down only 0.8%; now down about 40% from cost. Delivery and funding are the whole story</td></tr>
+        <tr><td><div class="ticker-cell">MU</div><div class="radar-risk-scope">Micron</div></td><td>Memory pricing, patent action, China</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Gave back 2.6% on profit-taking; sold-out 2026 HBM still frames the bull case. The Netlist DDR5 actions stay unresolved, with fiscal Q4 due Sep 30</td></tr>
+        <tr><td><div class="ticker-cell">CLS</div><div class="radar-risk-scope">Celestica</div></td><td>Valuation, dilution digestion, concentration</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Slid 2.3% with the hardware sleeve; valuation and the $3B dilution digestion are the watch items</td></tr>
+        <tr><td><div class="ticker-cell">TSLA</div><div class="radar-risk-scope">Tesla</div></td><td>Auto gross margin, robotaxi cadence</td><td><span class="status-badge st-steady">&mdash; Steady</span></td><td>Held for a friend, not a book position. Cybercab launches Thursday; the China recall and margin pressure stay the overhang</td></tr>
+      </tbody>
+    </table>
+    <div class="risk-legend">
+      <span class="status-badge st-rising">&uarr; Rising</span> <span class="status-badge st-steady">&mdash; Steady</span> <span class="status-badge st-easing">&darr; Easing</span>
+    </div>
+  </section>
+
+  <div class="brief-footer">
+    Generated September 1, 2026. Prices are the latest available session prices from Yahoo Finance. Coverage derived from __Portfolio 2026-08-11.xlsx, modified Aug 11 14:47 ET. No names added or dropped since the prior run. For personal use only. Data from Yahoo Finance and web search. Index levels are Yahoo Finance session values. Chart series are monthly closes. Feb and Mar 2026 WTI points are carried forward from the prior brief because Yahoo returned no monthly close for those two months.
+  </div>
+
+</div>
+
+<script>
+const labels = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26','Sep 26'];
+
+new Chart(document.getElementById('chartRates'), {
+  type: 'line',
+  data: { labels, datasets: [
+    { label: '10Y Yield (%)', data: [4.10, 4.02, 4.16, 4.24, 3.96, 4.31, 4.39, 4.45, 4.42, 4.74, 4.72, 4.80],
+      borderColor: '#1a56cc', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+    { label: '30Y Yield (%)', data: [4.67, 4.66, 4.84, 4.87, 4.63, 4.89, 4.99, 4.99, 4.90, 5.28, 5.21, 5.27],
+      borderColor: '#7c3aed', backgroundColor: 'transparent', borderWidth: 2, borderDash: [4, 3], pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+    { label: 'WTI ($/bbl)', data: [60.98, 58.55, 57.42, 65.21, 67.02, 101.38, 105.07, 87.36, 69.50, 84.67, 83.40, 90.66],
+      borderColor: '#cc6600', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y1' }
+  ]},
+  options: {
+    responsive: true,
+    plugins: { legend: { display: true, labels: { font: { size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { font: { size: 10 }, maxTicksLimit: 12 }, grid: { display: false } },
+      y: { ticks: { font: { size: 10 } }, grid: { color: '#f0f0f0' }, title: { display: true, text: 'Yield %', font: { size: 10 } } },
+      y1: { position: 'right', ticks: { font: { size: 10 } }, grid: { display: false }, title: { display: true, text: 'WTI $/bbl', font: { size: 10 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
